@@ -29,7 +29,7 @@ gq <- c(982,321,324,424,451,710,589,551,985,782,784,783)
 # create new intermediate column 'unit_category' and apply criteria with case_when().
 # result is one-to-many table
 df_code <- df %>% 
-  select(PIN, ComplexDescr, SectionUse, unit_category) %>% 
+  select(PIN, ComplexDescr, SectionUse) %>% 
   mutate(unit_category = case_when(SectionUse %in% res ~ 'Residential',
                                    SectionUse %in% gq ~ 'Group Quarters',
                                    TRUE ~ 'Other')) %>% 
