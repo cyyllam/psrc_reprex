@@ -26,7 +26,8 @@ df <- left_join(dfs$complex, sec_use, by = 'PIN')
 res <- c(300,984,352,348,596,587,351)
 gq <- c(982,321,324,424,451,710,589,551,985,782,784,783)
 
-# create new intermediate column 'unit_category' and apply criteria with case_when()
+# create new intermediate column 'unit_category' and apply criteria with case_when().
+# result is one-to-many table
 df_code <- df %>% 
   select(PIN, ComplexDescr, SectionUse, unit_category) %>% 
   mutate(unit_category = case_when(SectionUse %in% res ~ 'Residential',
@@ -41,7 +42,7 @@ df_cat <- df_code %>%
   group_by(PIN, ComplexDescr) %>% 
   summarise(sum_unit_bin = sum(unit_bin))
 
-# final one-to-one table
+# final one-to-one table, apply labels
 df_complex <- dfs$complex %>% 
   left_join(df_cat, by = c('PIN', 'ComplexDescr')) %>% 
   mutate(complex_category = case_when(sum_unit_bin == 0 ~ 'Residential',
