@@ -49,8 +49,11 @@ df_complex <- dfs$complex %>%
                                       sum_unit_bin > 0 ~ 'Group Quarters',
                                       is.na(sum_unit_bin) ~ 'Other'))
 
+gq_qc <- df_complex %>% 
+  filter(complex_category == 'Group Quarters') %>% 
+  select(PIN, ComplexDescr)
 
-
+gq_code <- semi_join(df_code, gq_qc, by = c('PIN'))
 
 
 
