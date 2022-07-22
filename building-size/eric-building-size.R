@@ -45,13 +45,19 @@ create_summary_table <- function(year) {
 }
 
 # years of interest
-years <- 2010:2014
+years <- 2010:2011
 
 # iterate thru each year and pass it through the function. Store each output in the list.
-list_of_all_tables <- map(years, ~create_summary_table(.x))
+all_tables <- map(years, ~create_summary_table(.x)) %>% 
+  reduce(bind_rows)
+
+all_tables_2 <- all_tables %>% 
+  mutate(building_size = factor(building_size,
+                                levels = c('Single Family', '2-4 units', '5-19 units', '2-19 units', 'Mobile Home/Other'))) %>% 
+  arrange(year, name, building_size)
 
 # View a table in the list
-View(list_of_all_tables[[1]])
+# View(list_of_all_tables[[1]])
 
 
 
