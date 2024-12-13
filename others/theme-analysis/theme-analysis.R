@@ -19,7 +19,14 @@ df_piv2 <- df_piv |>
 # create all possible theme combinations in groups of 3
 themes <- unique(df_piv$theme)
 grid <- combinations(13, 3, themes) |> 
-  as_tibble()
+  as_tibble() |> 
+  rowwise() |> 
+  mutate(combos = list(c(V1, V2, V3)))
 
-
-
+# for(i in 1:length(grid$combos)) {
+for(i in 1:5) {
+  print(grid$combos[[i]])
+  df_f <- df_piv2 |> 
+    filter(theme %in% grid$combos[[i]])
+  print(df_f)
+}
