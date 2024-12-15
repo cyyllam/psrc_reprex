@@ -25,10 +25,11 @@ grid <- combinations(length(themes), 3, themes) |>
   unite(combo_label, V1, V2, V3, sep = ", ", remove = FALSE)
 
 # initiate main table
+main_df <- NULL
 
 # loop through each combo
 for(i in 1:length(grid$combos)) {
-# for(i in 1:1) {
+# for(i in 1:2) {
   print(grid$combos[[i]])
   
   # filter for combo
@@ -46,7 +47,7 @@ for(i in 1:length(grid$combos)) {
     summarise(num_themes = n()) |> 
     arrange(desc(num_themes))
 
-  # find specific theme each city belongs to
+  # find themes associated with each jurisdiction
   juris_theme <- df_piv |> 
     filter(theme %in% grid$combos[[i]]) |> 
     nest(theme = theme) |> 
@@ -56,6 +57,8 @@ for(i in 1:length(grid$combos)) {
     left_join(juris_theme, by = 'juris')
   
   # append to main table
+  ifelse(is.null(main_df), main_df <- df_join, main_df <- main_df |> bind_rows(df_join))
 }
 
+# write.xlsx(main_df, "theme-analysis.xlsx")
 
