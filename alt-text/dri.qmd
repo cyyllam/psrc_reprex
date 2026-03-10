@@ -1,0 +1,38 @@
+---
+title: "Displacement Risk Report"
+format: html
+editor: visual
+execute:
+  warning: false
+---
+
+
+```{r libraries}
+library(tidyverse)
+library(quarto)
+library(knitr)
+```
+
+
+
+```{r}
+#| label: fig-plot
+#| fig-cap: "Penguin plot"
+#| fig-alt: !expr paste("Scatterplot showing", nrow(palmerpenguins::penguins)"penguins.")
+
+ggplot(palmerpenguins::penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+  geom_point()
+```
+
+
+```{r setup}
+
+img_path <- "Y:/VISION 2050/Data/Displacement/Displacement Index 2026/docs/Figures/Histograms"
+img_fnames <- list.files(img_path, full.names = TRUE)[1:3]
+img_alttext <- c("hist01", "hist02", "hist03")
+
+```
+![](`r img_fnames[1]`){fig-alt="This is a dynamic value: `r nrow(mtcars)`."}
+
+![](Y:/VISION 2050/Data/Displacement/Displacement Index 2026/docs/Figures/Histograms/01.png)
+

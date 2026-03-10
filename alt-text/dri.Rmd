@@ -1,0 +1,82 @@
+---
+title: "Inserting Alt-text & RMarkdown"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+```
+
+Unfortunately I haven't had success with programmatically adding alt-text with images in Quarto.
+
+## {.tabset}
+
+### HTML 
+
+To view alt-text, open your browser's "Developer Tools" (`Ctrl + Shift + I` in Chrome). Use the pointer and click on the image. You'll be re-directed to the HTML line with the `img` tag and its `fig-alt` attribute.
+
+#### Static images
+
+```{r, eval=FALSE}
+Here is an example of a static image with dynamic alt-text:
+
+![](Y:/VISION 2050/Data/Displacement/Displacement Index 2026/docs/Figures/Histograms/01.png){fig-alt="This is a dynamic value: `r nrow(mtcars)`."}
+```
+
+![](Y:/VISION 2050/Data/Displacement/Displacement Index 2026/docs/Figures/Histograms/01.png){fig-alt="This is a dynamic value: `r nrow(mtcars)`."}
+
+
+```{r paths}
+
+img_path <- "Y:/VISION 2050/Data/Displacement/Displacement Index 2026/docs/Figures/Histograms"
+img_fnames <- list.files(img_path, full.names = TRUE)[1:3]
+img_alttext <- c("hist01", "hist02", "hist03")
+
+```
+
+Use this to dynamically `{r, out.width="100%", fig.alt=img_alttext[1]}` add alt-text in the code chunk settings
+```{r, out.width="100%", fig.alt=img_alttext[1]}
+knitr::include_graphics(img_fnames[1])
+```
+
+#### ggplot2
+
+`labs(alt = )`
+
+`get_alt_text(g)` if the plot is saved as a variable (e.g. `g`)
+
+```{r}
+# Create a scatter plot with a linear regression line
+g <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + # Add a linear model fit line
+  labs(
+    title = "Relationship between Weight and Miles per Gallon",
+    x = "Weight (1000 lbs)",
+    y = "Miles/(US) gallon",
+    caption = "Source: mtcars dataset",
+    alt = "A scatterplot showing the relationship between Weight (lbs) and Miles per Gallon."
+  ) +
+  theme_minimal()
+```
+```{r, eval=FALSE, results='asis'}
+{r, fig.alt=get_alt_text(g)}
+
+g
+```
+
+```{r, fig.alt=get_alt_text(g), echo=FALSE}
+g
+```
+
+
+
+### Resources
+
+- https://www.jumpingrivers.com/blog/accessibility-alt-text-in-r/
+
+
