@@ -1,0 +1,88 @@
+---
+title: "Dynamic Alt-text Options"
+format: html
+editor: visual
+execute:
+  warning: false
+  echo: fenced
+---
+
+```{r libraries}
+library(tidyverse)
+library(quarto)
+library(knitr)
+```
+
+::: panel-tabset
+## html
+
+### Testing !expr in code chunk settings
+
+#### Using general expressions in fig-alt
+
+Does not work. Image renders but when you check in `developer tools` or right-click image and click on `Inspect`, the alt-text is the code verbatim. It does not evaluate the expressions.
+
+```{r}
+#| label: fig-plot
+#| fig-cap: "Penguin plot"
+#| fig-alt: !expr paste("Scatterplot showing", nrow(palmerpenguins::penguins), "penguins."))
+#| output: asis
+
+ggplot(palmerpenguins::penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+  geom_point()
+```
+
+#### Using ggplot2::get_alt_text()
+
+Works! when function is embedded in fig-alt setting.
+
+```{r}
+#| label: fig-plot-ggplot2-alt
+#| fig-alt: !expr ggplot2::get_alt_text(g)
+
+g <- ggplot(palmerpenguins::penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+  geom_point() +
+  labs(alt = paste("Scatterplot showing", nrow(palmerpenguins::penguins), "penguins."))
+
+g
+```
+
+### Static images
+
+I'm not able to render an image with an absolute image path using `knitr::include_graphics()`.
+
+```{r vars setup}
+
+img_path <- "Y:/VISION 2050/Data/Displacement/Displacement Index 2026/docs/Figures/Histograms"
+img_fnames <- list.files(img_path, full.names = TRUE)[1:3]
+img_alttext <- c("hist01", "hist02", "hist03")
+
+```
+
+Using `include_graphics()` with hardcoded fig-alt text works, but not with `!expr` and a variable.
+
+```{r}
+#| fig-alt: !expr img_alttext[1]
+
+include_graphics(img_fnames[1])
+```
+
+The following code is not reliable. The image doesn't render. This: `img_fnames[1]` becomes this: `![](%60r%20img_fnames%5B1%5D%60){fig-alt=`r img_alttext[1]`}`
+
+```{r}
+#| eval: false
+
+# ![](`r img_fnames[1]`){fig-alt=`r img_alttext[1]`}
+
+```
+
+![](%60r%20img_fnames%5B1%5D%60){fig-alt=`r img_alttext[1]`}
+
+## Resources
+
+Some say that relative paths are required for quarto projects, but that poses a problem when images are used across multiple projects.
+
+- https://github.com/quarto-dev/quarto-cli/issues/12041
+
+:::
+
