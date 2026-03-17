@@ -1,0 +1,17 @@
+---
+title: "Displacement Risk Index Report"
+author: "Christy"
+date: "2026-03-17"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Testing Child
+```{r, child="section-01.Rmd", results = 'asis'}
+
+```
+
+
