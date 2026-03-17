@@ -2,14 +2,18 @@
 title: "Displacement Risk Index Report"
 author: "Christy"
 date: "2026-03-17"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Testing Child
+# Indicators
 ```{r, child="section-01.Rmd", results = 'asis'}
 
 ```
